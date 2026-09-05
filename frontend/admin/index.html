@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Portal — API Provider Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- Auth View -->
+    <div id="auth-view" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-badge">API Provider</span>
+                <h1>Super Admin Portal</h1>
+                <p>Monitor consumers, API keys, usage & logs</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Admin Username</label>
+                    <input type="text" id="username" class="input-field" value="admin" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="input-field" value="admin123" required autocomplete="current-password">
+                </div>
+                <div id="login-error" style="display:none; color:var(--danger); font-size:13px; margin-bottom:14px;"></div>
+                <button type="submit" id="btn-login" class="btn-primary">Sign In to Admin Portal</button>
+            </form>
+            <div class="hint-box" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div>
+                    <strong>Demo Credentials:</strong><br>
+                    <code>admin</code> / <code>admin123</code>
+                </div>
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="fillDemoCredentials('admin', 'admin123')">Auto-Fill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view" style="display: none;">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">&lambda;</div>
+                <div>
+                    <div class="brand-title">Super Admin Portal</div>
+                    <div class="brand-subtitle">API Provider Dashboard &bull; Port 8100</div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="user-tag" id="nav-user-tag">Admin: <strong id="current-admin-name">admin</strong></div>
+                <button id="btn-refresh" class="btn-secondary" onclick="loadDashboardData()">Refresh Data</button>
+                <button id="btn-logout" class="btn-secondary" onclick="logout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Calculator API Section -->
+            <div class="section-title">
+                <span>Managed API Infrastructure</span>
+            </div>
+            <div class="api-card">
+                <div>
+                    <div class="api-info-header">
+                        <h2 style="font-size: 20px;" id="api-name">Calculator API</h2>
+                        <span class="badge-online" id="api-status">Operational</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;" id="api-desc">
+                        Basic calculator operations (addition, subtraction, multiplication, division).
+                    </p>
+                    <div>
+                        <span style="font-size: 12px; color: var(--text-muted); margin-right: 8px;">Base URL:</span>
+                        <span class="api-url-box" id="api-base-url">http://localhost:8101</span>
+                    </div>
+                </div>
+                <div>
+                    <a href="http://localhost:8101/docs" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-block;">
+                        Open API Docs (Swagger) &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Registered Consumers Section -->
+            <div class="section-title">
+                <span>Registered API Consumers</span>
+                <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;" id="consumer-count-badge">1 Consumer</span>
+            </div>
+            <div class="consumer-grid" id="consumers-container">
+                <!-- Injected via JavaScript -->
+            </div>
+
+            <!-- Global Request Logs Section -->
+            <div class="section-title">
+                <span>Real-Time Request Activity Logs</span>
+                <span style="font-size: 13px; color: var(--text-muted); font-weight: normal;">Auto-refreshing live logs</span>
+            </div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time (UTC)</th>
+                            <th>Consumer</th>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-tbody">
+                        <tr>
+                            <td colspan="5" class="empty-state">Loading request activity...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

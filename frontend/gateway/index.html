@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Login Gateway — API Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <div class="gateway-wrapper">
+        <!-- Left Pane: Unified Login Form -->
+        <div class="login-pane">
+            <span class="brand-badge">Central Gateway &bull; Port 8080</span>
+            <h1>Sign In</h1>
+            <p class="subtitle">Enter credentials to automatically route to your portal</p>
+
+            <form id="gateway-login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="input-field" placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="input-field" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+                <div id="login-error" style="display:none; color:var(--danger); font-size:13px; margin-bottom:14px;"></div>
+                <button type="submit" id="btn-login" class="btn-primary">Sign In &amp; Launch Portal</button>
+            </form>
+        </div>
+
+        <!-- Right Pane: 1-Click Demo Accounts Selector -->
+        <div class="showcase-pane">
+            <div>
+                <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #a5b4fc; margin-bottom: 6px;">
+                    Test Environment Accounts
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                    Click any card below to auto-fill and test:
+                </p>
+
+                <!-- Super Admin Card -->
+                <div class="cred-card" onclick="selectAccount('admin', 'admin123')">
+                    <div class="cred-header">
+                        <span class="cred-title">Super Admin</span>
+                        <span class="role-tag tag-admin">Port 8100</span>
+                    </div>
+                    <div class="cred-details">
+                        User: <strong>admin</strong> &bull; Pass: <strong>admin123</strong>
+                    </div>
+                </div>
+
+                <!-- Alice Card -->
+                <div class="cred-card" onclick="selectAccount('alice', 'alice123')">
+                    <div class="cred-header">
+                        <span class="cred-title">Consumer 1 (Alice)</span>
+                        <span class="role-tag tag-consumer">Port 8200</span>
+                    </div>
+                    <div class="cred-details">
+                        User: <strong>alice</strong> &bull; Pass: <strong>alice123</strong> (1,000 Quota)
+                    </div>
+                </div>
+
+                <!-- Bob Card -->
+                <div class="cred-card" onclick="selectAccount('bob', 'bob123')">
+                    <div class="cred-header">
+                        <span class="cred-title">Consumer 2 (Bob)</span>
+                        <span class="role-tag tag-consumer">Port 8200</span>
+                    </div>
+                    <div class="cred-details">
+                        User: <strong>bob</strong> &bull; Pass: <strong>bob123</strong> (500 Quota)
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-muted); padding-top: 12px; border-top: 1px solid var(--border-color);">
+                Calculator API runs independently on <a href="http://localhost:8101/docs" target="_blank" style="color: #60a5fa; text-decoration: none;">Port 8101 (Docs)</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

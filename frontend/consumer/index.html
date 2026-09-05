@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Consumer Portal — Developer Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- Auth View -->
+    <div id="auth-view" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-badge">API Consumer</span>
+                <h1>Developer Portal</h1>
+                <p>Access APIs, test endpoints & monitor your usage</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Developer Username</label>
+                    <input type="text" id="username" class="input-field" value="alice" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="input-field" value="alice123" required autocomplete="current-password">
+                </div>
+                <div id="login-error" style="display:none; color:var(--danger); font-size:13px; margin-bottom:14px;"></div>
+                <button type="submit" id="btn-login" class="btn-primary">Sign In to Developer Portal</button>
+            </form>
+            <div class="hint-box" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                <div>
+                    <strong>Demo Credentials:</strong><br>
+                    <code>alice</code> / <code>alice123</code>
+                </div>
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 12px;" onclick="fillDemoCredentials('alice', 'alice123')">Auto-Fill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard View -->
+    <div id="dashboard-view" style="display: none;">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="brand-icon">&lt;/&gt;</div>
+                <div>
+                    <div class="brand-title">API Consumer Portal</div>
+                    <div class="brand-subtitle">Developer Usage &bull; Port 8200</div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="user-tag">Consumer: <strong id="current-user-name">alice</strong></div>
+                <button id="btn-refresh" class="btn-secondary" onclick="loadDashboardData()">Refresh</button>
+                <button id="btn-logout" class="btn-secondary" onclick="logout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- API Key Banner -->
+            <div class="key-banner">
+                <div>
+                    <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; color: #93c5fd;">
+                        Your Active API Key
+                    </div>
+                    <div class="key-text-wrapper">
+                        <span class="key-code" id="display-api-key">Loading API Key...</span>
+                        <button id="btn-copy-key" class="btn-copy" onclick="copyApiKey()">Copy API Key</button>
+                    </div>
+                </div>
+                <div style="font-size: 13px; color: var(--text-secondary);">
+                    Pass via header: <code style="color: #67e8f9; font-family: var(--font-mono);">X-API-Key: &lt;your-key&gt;</code>
+                </div>
+            </div>
+
+            <!-- 2-Column: API Documentation & Live Interactive Tester -->
+            <div class="main-grid">
+                <!-- Available APIs / Documentation -->
+                <div class="card">
+                    <h2 style="font-size: 17px; margin-bottom: 8px;" id="api-title">Calculator API</h2>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;" id="api-description">
+                        Basic calculator operations.
+                    </p>
+                    <div style="margin-bottom: 16px;">
+                        <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Base URL</span>
+                        <div style="font-family: var(--font-mono); font-size: 13px; color: #60a5fa; margin-top: 2px;" id="api-base-url-display">
+                            http://localhost:8101
+                        </div>
+                    </div>
+
+                    <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;">
+                        Available Endpoints
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="badge-get">GET</span>
+                        <span>/api/calculator/add?a=10&b=20</span>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="badge-get">GET</span>
+                        <span>/api/calculator/subtract?a=20&b=10</span>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="badge-get">GET</span>
+                        <span>/api/calculator/multiply?a=5&b=6</span>
+                    </div>
+                    <div class="endpoint-item">
+                        <span class="badge-get">GET</span>
+                        <span>/api/calculator/divide?a=20&b=4</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Live Tester -->
+                <div class="card">
+                    <h2 style="font-size: 17px; margin-bottom: 4px;">Calculator API Live Tester</h2>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                        Sends genuine HTTP requests to <code style="font-family: var(--font-mono); color: #93c5fd;">http://localhost:8101</code> using your API Key.
+                    </p>
+
+                    <form id="tester-form">
+                        <div class="tester-form">
+                            <div class="full-width">
+                                <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:6px;">Operation</label>
+                                <select id="test-op" class="input-field" style="cursor: pointer;">
+                                    <option value="add">Addition (+)</option>
+                                    <option value="subtract">Subtraction (-)</option>
+                                    <option value="multiply">Multiplication (*)</option>
+                                    <option value="divide">Division (/)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:6px;">Parameter A</label>
+                                <input type="number" id="test-a" class="input-field" value="10" step="any" required>
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:6px;">Parameter B</label>
+                                <input type="number" id="test-b" class="input-field" value="20" step="any" required>
+                            </div>
+                        </div>
+                        <button type="submit" id="btn-send-test" class="btn-send">Send Request to Calculator API</button>
+                    </form>
+
+                    <div style="margin-top: 16px;">
+                        <div class="response-header">
+                            <span>Response from Port 8101:</span>
+                            <span id="response-status-badge" class="status-badge" style="display:none;"></span>
+                        </div>
+                        <pre id="response-output" class="response-box">Click "Send Request" to test the Calculator API...</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Cards Grid -->
+            <div class="section-title">
+                <span>Usage & Analytics Metrics</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">Source of Truth: api_request_logs</span>
+            </div>
+            <div class="analytics-grid">
+                <!-- Request Volume -->
+                <div class="metric-card">
+                    <div class="title">Request Volume</div>
+                    <div class="value" id="val-total-requests">0</div>
+                    <div class="subtitle">Total requests made</div>
+                </div>
+
+                <!-- Quota Overview -->
+                <div class="metric-card">
+                    <div class="title">Quota Limit</div>
+                    <div class="value" id="val-quota-limit">1,000</div>
+                    <div class="subtitle"><span id="val-remaining">1,000</span> remaining (<span id="val-used">0</span> used)</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="quota-progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; text-align: right;" id="val-usage-pct">0% used</div>
+                </div>
+
+                <!-- Error Rate -->
+                <div class="metric-card">
+                    <div class="title">Error Rate</div>
+                    <div class="value" id="val-error-rate" style="color: var(--success);">0%</div>
+                    <div class="subtitle">
+                        <span style="color: var(--success);"><strong id="val-success-count">0</strong> success</span> &bull; 
+                        <span style="color: var(--danger);"><strong id="val-fail-count">0</strong> failed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Requests Table -->
+            <div class="section-title">
+                <span>Recent Request History</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">Your private request activity</span>
+            </div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Status Code</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consumer-logs-tbody">
+                        <tr>
+                            <td colspan="4" class="empty-state">No requests recorded yet. Make a request above!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
