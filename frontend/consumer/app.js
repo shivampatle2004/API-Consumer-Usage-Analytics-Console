@@ -1,7 +1,8 @@
 let consumerToken = localStorage.getItem("consumer_token");
 let rawApiKey = "";
-let pollInterval = null;
-const CALCULATOR_API_BASE = "http://localhost:8101";
+const CALCULATOR_API_BASE = (window.location.port === "8200" || window.location.port === "8080" || window.location.port === "8100")
+    ? "http://localhost:8101"
+    : window.location.origin;
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("login-form");
